@@ -16,16 +16,28 @@ namespace MVC_Blog.Models
         [Key]
         public int Id { get; set; }
 
+        public int TopicId { get; set; }
+
         [Required]
         [StringLength(200)]
+        [Display(Name = "Заглавие")]
         public string Title { get; set; }
 
         [Required]
+        [Display(Name = "Съдържание")]
         public string Body { get; set; }
 
         [Required]
+        [Display(Name = "Дата")]
         public DateTime Date { get; set; }
 
+        [Display(Name = "Автор")]
         public ApplicationUser Author { get; set; }
+
+        public virtual ICollection<Comment> Comments { get; set; }
+
+        public virtual ICollection<Tag> Tags { get; set; }
+
+        public virtual Topic Topic { get; set; }
     }
 }
