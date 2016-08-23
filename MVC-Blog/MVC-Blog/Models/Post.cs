@@ -25,6 +25,7 @@ namespace MVC_Blog.Models
 
         [Required]
         [Display(Name = "Съдържание")]
+        [DataType(DataType.MultilineText)]
         public string Body { get; set; }
 
         [Required]

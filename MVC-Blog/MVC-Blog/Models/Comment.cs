@@ -23,6 +23,8 @@ namespace MVC_Blog.Models
         public string AuthorName { get; set; }
 
         [Required]
+        [DataType(DataType.MultilineText)]
+        [Display(Name = "Текст на коментара")]
         public string Text { get; set; }
 
         [Required]

@@ -8,14 +8,14 @@
 
 <div>
     <h4>Post</h4>
-    <hr />
+    <hr/>
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.TopicId)
+            @Html.DisplayNameFor(model => model.Topic.Name)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.TopicId)
+            @Html.DisplayFor(model => model.Topic.Name)
         </dd>
 
         <dt>
@@ -44,7 +44,15 @@
 
     </dl>
 </div>
+
 <p>
     @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
     @Html.ActionLink("Back to List", "Index")
 </p>
+
+<div>Коментари: TODO - Да го направя красиво и с повечко неща!</div>
+@foreach (var com in Model.Comments)
+{
+   
+    <div>@com.Text</div>
+}

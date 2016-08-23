@@ -28,6 +28,7 @@
             @Html.DisplayNameFor(model => model.Date)
         </th>
         <th>@Html.DisplayNameFor(model => model.Author.FullName)</th>
+        <th>Коментари</th>
         <th>Действия</th>
     </tr>
 
@@ -50,11 +51,12 @@
                 @item.Author.FullName
             }
             else
-            {@: (<i>анонимен</i>)
+            {@: (<i>анонимен автор</i>)
             }
-        
-           
-            
+        </td>
+        <td>@if (item.Comments.Count > 0)
+            {@item.Comments.Count
+            }
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |

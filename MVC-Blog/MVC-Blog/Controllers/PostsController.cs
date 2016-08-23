@@ -10,6 +10,7 @@ using MVC_Blog.Models;
 
 namespace MVC_Blog.Controllers
 {
+    [ValidateInput(false)]
     public class PostsController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
@@ -20,6 +21,7 @@ namespace MVC_Blog.Controllers
             List<Post> posts = db.Posts
                 .Include(t => t.Topic)
                 .Include(u => u.Author)
+                .Include(c=>c.Comments)
                 .ToList();
 
             return View(posts);
@@ -41,6 +43,7 @@ namespace MVC_Blog.Controllers
         }
 
         // GET: Posts/Create
+        [Authorize]
         public ActionResult Create()
         {
             return View();
@@ -51,10 +54,13 @@ namespace MVC_Blog.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,TopicId,Title,Body,Date")] Post post)
+        [Authorize]
+        public ActionResult Create([Bind(Include = "Id,TopicId,Title,Body")] Post post) //The date is not coming in from the form
         {
             if (ModelState.IsValid)
             {
+                post.Author = db.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);
+                post.Date=DateTime.Now; // the date of the post is always today
                 db.Posts.Add(post);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -64,6 +70,7 @@ namespace MVC_Blog.Controllers
         }
 
         // GET: Posts/Edit/5
+        [Authorize(Roles = "Administrators")]
         public ActionResult Edit(int? id)
         {
             if (id == null)
@@ -83,6 +90,7 @@ namespace MVC_Blog.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Administrators")]
         public ActionResult Edit([Bind(Include = "Id,TopicId,Title,Body,Date")] Post post)
         {
             if (ModelState.IsValid)
@@ -95,6 +103,7 @@ namespace MVC_Blog.Controllers
         }
 
         // GET: Posts/Delete/5
+        [Authorize(Roles = "Administrators")]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -110,6 +119,7 @@ namespace MVC_Blog.Controllers
         }
 
         // POST: Posts/Delete/5
+        [Authorize(Roles = "Administrators")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
