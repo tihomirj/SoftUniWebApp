@@ -135,3 +135,4 @@ C:\Users\Tihomir\OneDrive\SoftUni\Software-Technologies\ASP.NET_MVC\Exercises\Fi
 C:\Users\Tihomir\OneDrive\SoftUni\Software-Technologies\ASP.NET_MVC\Exercises\FinalProject\SoftUniWebApp\MVC-Blog\MVC-Blog\bin\Microsoft.Owin.Security.MicrosoftAccount.xml
 C:\Users\Tihomir\OneDrive\SoftUni\Software-Technologies\ASP.NET_MVC\Exercises\FinalProject\SoftUniWebApp\MVC-Blog\MVC-Blog\obj\Debug\MVC-Blog.dll
 C:\Users\Tihomir\OneDrive\SoftUni\Software-Technologies\ASP.NET_MVC\Exercises\FinalProject\SoftUniWebApp\MVC-Blog\MVC-Blog\obj\Debug\MVC-Blog.pdb
+C:\Users\Tihomir\OneDrive\SoftUni\Software-Technologies\ASP.NET_MVC\Exercises\FinalProject\SoftUniWebApp\MVC-Blog\MVC-Blog\obj\Debug\MVC-Blog.csprojResolveAssemblyReference.cache

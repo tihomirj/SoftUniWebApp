@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Security.Cryptography;
 using System.Web;
 using System.Web.Mvc;
 using MVC_Blog.Models;
@@ -82,6 +83,12 @@ namespace MVC_Blog.Controllers
             {
                 return HttpNotFound();
             }
+            var authors = db.Users.ToList();
+            ViewBag.Authors = authors;
+
+            var topics = db.Topics.ToList();
+            ViewBag.Topics = topics;
+
             return View(post);
         }
 
@@ -91,7 +98,7 @@ namespace MVC_Blog.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrators")]
-        public ActionResult Edit([Bind(Include = "Id,TopicId,Title,Body,Date")] Post post)
+        public ActionResult Edit([Bind(Include = "Id,TopicId,Title,Body,Date,Author_Id")] Post post)
         {
             if (ModelState.IsValid)
             {

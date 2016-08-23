@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
@@ -33,7 +34,10 @@ namespace MVC_Blog.Models
         public DateTime Date { get; set; }
 
         [Display(Name = "Автор")]
+        [ForeignKey("Author_Id")]
         public ApplicationUser Author { get; set; }
+
+        public string Author_Id { get; set; }
 
         public virtual ICollection<Comment> Comments { get; set; }
 
