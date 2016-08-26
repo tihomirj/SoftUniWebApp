@@ -36,6 +36,8 @@ namespace MVC_Blog.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             Post post = db.Posts.Find(id);
+            var comments = db.Posts.Find(id).Comments.ToList();
+            ViewBag.Comments = comments;
             if (post == null)
             {
                 return HttpNotFound();

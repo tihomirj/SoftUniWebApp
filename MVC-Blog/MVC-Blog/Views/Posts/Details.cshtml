@@ -50,9 +50,20 @@
     @Html.ActionLink("Back to List", "Index")
 </p>
 
-<div>Коментари: TODO - Да го направя красиво и с повечко неща!</div>
-@foreach (var com in Model.Comments)
-{
-   
-    <div>@com.Text</div>
+<h3>Коментари:</h3>
+
+<table class="table">
+    <tr>
+        <th>Коментар</th>
+        <th>Автор</th>
+        <th>Дата</th>
+    </tr>
+@foreach (var com in ViewBag.Comments){
+    <tr>
+        <td>@com.Text</td>
+        <td>@com.Author.FullName</td>
+        <td>@com.Date</td>
+    </tr>
 }
+</table>
+

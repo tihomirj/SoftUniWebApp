@@ -1,0 +1,50 @@
+﻿@model MVC_Blog.Models.Comment
+
+@{
+    ViewBag.Title = "Детайли на коментари";
+}
+
+<h2>Детайли</h2>
+
+<div>
+    <h4>Коментари</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Author.FullName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Author.FullName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Post.Title)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Post.Title)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Text)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Text)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Date)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Date)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Редактирай", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Обратно към списъка с коментари", "Index")
+</p>

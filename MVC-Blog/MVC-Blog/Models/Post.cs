@@ -17,6 +17,7 @@ namespace MVC_Blog.Models
         }
 
         [Key]
+        [Display(Name = "Статия")]
         public int Id { get; set; }
 
         public int TopicId { get; set; }

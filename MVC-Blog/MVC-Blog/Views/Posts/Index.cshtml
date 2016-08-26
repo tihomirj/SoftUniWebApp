@@ -59,9 +59,10 @@
             }
         </td>
         <td>
-            @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |
-            @Html.ActionLink("Details", "Details", new { id=item.Id }) |
-            @Html.ActionLink("Delete", "Delete", new { id=item.Id })
+            @Html.ActionLink("Коментирай", "Create", "Comments") |
+            @Html.ActionLink("Редактирай", "Edit", new { id = item.Id }) |
+            @Html.ActionLink("Към статия", "Details", new {id = item.Id}) |
+            @Html.ActionLink("Изтриване", "Delete", new {id = item.Id})
         </td>
     </tr>
 }

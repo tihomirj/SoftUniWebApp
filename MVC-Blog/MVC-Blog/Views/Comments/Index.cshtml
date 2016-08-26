@@ -1,0 +1,53 @@
+﻿@model IEnumerable<MVC_Blog.Models.Comment>
+
+@{
+    ViewBag.Title = "Коментари";
+}
+
+<h2>Коментари</h2>
+
+<p>
+    @Html.ActionLink("Създай нов", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Author.FullName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.PostId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Text)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Date)
+        </th>
+        <th>
+            Действия
+        </th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Author.FullName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Post.Title)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Text)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Date)
+        </td>
+        <td>
+            @Html.ActionLink("Редактирай", "Edit", new { id=item.Id }) |
+            @Html.ActionLink("Към коментар", "Details", new { id=item.Id }) |
+            @Html.ActionLink("Изтрий", "Delete", new { id=item.Id })
+        </td>
+    </tr>
+}
+
+</table>
