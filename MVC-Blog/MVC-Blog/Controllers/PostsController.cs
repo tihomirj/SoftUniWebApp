@@ -47,6 +47,9 @@ namespace MVC_Blog.Controllers
         [Authorize]
         public ActionResult Create()
         {
+            var topics = db.Topics.ToList();
+            ViewBag.Topics = topics;
+
             return View();
         }
 
@@ -98,7 +101,7 @@ namespace MVC_Blog.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Administrators")]
-        public ActionResult Edit([Bind(Include = "Id,TopicId,Title,Body,Date,Author_Id")] Post post)
+        public ActionResult Edit([Bind(Include = "Id,TopicId,Title,Body,Date,AuthorId")] Post post)
         {
             if (ModelState.IsValid)
             {

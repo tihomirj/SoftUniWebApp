@@ -18,7 +18,7 @@
         @Html.HiddenFor(model => model.Id)
 
         <div class="form-group">
-            @Html.LabelFor(model => model.TopicId, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.Topic.Name, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 <select class="form-control" name="TopicId">
                     @foreach (var topic in ViewBag.Topics)
@@ -58,7 +58,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Author, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                <select class="form-control" name="Author_Id">
+                <select class="form-control" name="AuthorId">
                     @foreach (var author in ViewBag.Authors)
                     {
                         <option value="@author.Id">@author.FullName (@author.UserName)</option>

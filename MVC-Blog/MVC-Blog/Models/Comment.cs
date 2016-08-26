@@ -20,7 +20,9 @@ namespace MVC_Blog.Models
 
         public int PostId { get; set; }
 
-        public string AuthorName { get; set; }
+        public string AuthorId { get; set; }
+
+        public virtual ApplicationUser Author { get; set; }
 
         [Required]
         [DataType(DataType.MultilineText)]
@@ -29,8 +31,6 @@ namespace MVC_Blog.Models
 
         [Required]
         public DateTime Date { get; set; }
-
-
 
         public virtual Post Post { get; set; }
     }
