@@ -106,7 +106,7 @@ namespace MVC_Blog.Controllers
         }
 
         // GET: Comments/Delete/5
-        [Authorize(Roles = "Administrators")]
+        [Authorize]
         public ActionResult Delete(int? id)
         {
             if (id == null)
@@ -124,7 +124,7 @@ namespace MVC_Blog.Controllers
         // POST: Comments/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Administrators")]
+        [Authorize]
         public ActionResult DeleteConfirmed(int id)
         {
             Comment comment = db.Comments.Find(id);

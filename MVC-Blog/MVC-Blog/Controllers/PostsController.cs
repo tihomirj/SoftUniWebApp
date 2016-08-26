@@ -76,15 +76,16 @@ namespace MVC_Blog.Controllers
         }
 
         // GET: Posts/Edit/5
-        [Authorize(Roles = "Administrators")]
+        [Authorize]
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Post post = db.Posts.Find(id);
-            if (post == null)
+            //Post post = db.Posts.Find(id);
+            Post post = db.Posts.Include(p => p.Author).SingleOrDefault(p => p.Id == id);
+            if (post == null || (post.Author.UserName != User.Identity.Name && !User.IsInRole("Administrators")))
             {
                 return HttpNotFound();
             }
@@ -102,7 +103,7 @@ namespace MVC_Blog.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Administrators")]
+        [Authorize]
         public ActionResult Edit([Bind(Include = "Id,TopicId,Title,Body,Date,AuthorId")] Post post)
         {
             if (ModelState.IsValid)
@@ -115,23 +116,25 @@ namespace MVC_Blog.Controllers
         }
 
         // GET: Posts/Delete/5
-        [Authorize(Roles = "Administrators")]
+        [Authorize]
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Post post = db.Posts.Find(id);
-            if (post == null)
+            //Post post = db.Posts.Find(id);
+            Post post = db.Posts.Include(p => p.Author).SingleOrDefault(p => p.Id == id);
+            if (post == null || (post.Author.UserName != User.Identity.Name && !User.IsInRole("Administrators")))
             {
                 return HttpNotFound();
             }
+            
             return View(post);
         }
 
         // POST: Posts/Delete/5
-        [Authorize(Roles = "Administrators")]
+        [Authorize]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)

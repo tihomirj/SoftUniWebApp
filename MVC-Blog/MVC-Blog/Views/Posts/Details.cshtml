@@ -46,24 +46,30 @@
 </div>
 
 <p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @if (User.IsInRole("Administrators"))
+    {
+        @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) @:|
+    }
     @Html.ActionLink("Back to List", "Index")
 </p>
+@if (Model.Comments.Count > 0)
+{
 
-<h3>Коментари:</h3>
+    <h3>Коментари:</h3>
 
-<table class="table">
-    <tr>
-        <th>Коментар</th>
-        <th>Автор</th>
-        <th>Дата</th>
-    </tr>
-@foreach (var com in ViewBag.Comments){
-    <tr>
-        <td>@com.Text</td>
-        <td>@com.Author.FullName</td>
-        <td>@com.Date</td>
-    </tr>
+    <table class="table">
+        <tr>
+            <th>Коментар</th>
+            <th>Автор</th>
+            <th>Дата</th>
+        </tr>
+        @foreach (var com in ViewBag.Comments)
+        {
+            <tr>
+                <td>@com.Text</td>
+                <td>@com.Author.FullName</td>
+                <td>@com.Date</td>
+            </tr>
+        }
+    </table>
 }
-</table>
-

@@ -36,6 +36,7 @@ namespace MVC_Blog.Controllers
         }
 
         // GET: Topics/Create
+        [Authorize(Roles = "Administrators")]
         public ActionResult Create()
         {
             return View();
