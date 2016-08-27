@@ -76,8 +76,9 @@ namespace MVC_Blog.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Comment comment = db.Comments.Find(id);
-            if (comment == null)
+            //Comment comment = db.Comments.Find(id);
+            Comment comment = db.Comments.Include(p => p.Author).SingleOrDefault(p => p.Id == id);
+            if (comment == null || (comment.Author.UserName!=User.Identity.Name && !User.IsInRole("Administrators")))
             {
                 return HttpNotFound();
             }
@@ -113,11 +114,17 @@ namespace MVC_Blog.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Comment comment = db.Comments.Find(id);
+            /*Comment comment = db.Comments.Find(id);
             if (comment == null)
             {
                 return HttpNotFound();
+            }*/
+            Comment comment = db.Comments.Include(p => p.Author).SingleOrDefault(p => p.Id == id);
+            if (comment == null || (comment.Author.UserName!=User.Identity.Name && !User.IsInRole("Administrators")))
+            {
+                return HttpNotFound();
             }
+
             return View(comment);
         }
 

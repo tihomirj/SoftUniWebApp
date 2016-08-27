@@ -1,79 +1,116 @@
-﻿@using MVC_Blog.Classes;
-@using MVC_Blog.Models
+﻿@model PagedList.IPagedList<MVC_Blog.Models.Post>
 
-@model IEnumerable<Post>
+@using System.Data.SqlClient:
+@using MVC_Blog.Classes;
+@using MVC_Blog.Models;
+@using PagedList.Mvc;
 
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css"/>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Posts";
 }
 
-<h2>Index</h2>
+<h2>Статии</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Създай нова статия", "Create")
 </p>
+
+@using (Html.BeginForm("Index", "Posts", FormMethod.Get))
+{
+    <span>
+        Намери по заглавие: @Html.TextBox("SearchStringTitle",ViewBag.CurrentFilterTitle as string)
+        <input class="btn btn-default" type="submit" value="Search" />
+    </span>
+    <span>
+        Намери по автор: @Html.TextBox("SearchStringName", ViewBag.CurrentFilterName as string)
+        <input class="btn btn-default" type="submit" value="Search" />
+    </span>
+}
+
 <table class="table">
     <tr>
+
+        <th>@Html.ActionLink("Категория", "Index", new {SortOrder = ViewBag.TopicSortParm})</th>
+
+        <th>@Html.ActionLink("Заглавие", "Index", new {SortOrder = ViewBag.TitleSortParm})</th>
         <th>
-            @Html.DisplayNameFor(model => model.Topic.Name)
+            Съдържание
         </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Title)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Body)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Date)
-        </th>
-        <th>@Html.DisplayNameFor(model => model.Author.FullName)</th>
-        <th>Коментари</th>
+        <th>@Html.ActionLink("Дата", "Index", new {SortOrder = ViewBag.DateSortParm})</th>
+
+        <th>@Html.ActionLink("Автор", "Index", new {SortOrder = ViewBag.NameSortParm})</th>
+        <!--<th>Коментари</th>-->
+        <th>@Html.ActionLink("Коментари", "Index", new {SortOrder = ViewBag.CommentSortParm})</th>
         <th>Действия</th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Topic.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Title)
-        </td>
-        <td>
-            @Utils.CutText(item.Body)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Date)
-        </td>
-        <td>@if (item.Author != null)
-            {
-                @item.Author.FullName @:(@item.Author.UserName)
-            }
-            else
-            {@: (<i>анонимен автор</i>)
-            }
-        </td>
-        <td>@if (item.Comments.Count > 0)
-            {@item.Comments.Count
-            }
-        </td>
-        <td>
-            @Html.ActionLink("Коментирай", "Create", "Comments") |
-            @if (User.IsInRole("Administrators") || (item.Author!=null && User.Identity.Name == item.Author.UserName))
-            {
-                @Html.ActionLink("Редактирай", "Edit", new { id = item.Id }) @:|
-            }
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Topic.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Utils.CutText(item.Body)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Date)
+            </td>
+            <td>@if (item.Author != null)
+                {
+                    @item.Author.FullName
+                    @:(@item.Author.UserName)
+                }
+                else
+                {@: (<i>анонимен автор</i>)
+                }
+            </td>
+            <td>@if (item.Comments.Count > 0)
+                {@item.Comments.Count
+                }
+            </td>
+            <td>
+                @Html.ActionLink("Коментирай", "Create", "Comments") |
+                @if (User.IsInRole("Administrators") || (item.Author != null && User.Identity.Name == item.Author.UserName))
+                {
+                    @Html.ActionLink("Редактирай", "Edit", new {id = item.Id})
+                    @:|
+                }
 
-            @Html.ActionLink("Към статия", "Details", new {id = item.Id})
-            @if (User.IsInRole("Administrators")|| (item.Author!=null && User.Identity.Name == item.Author.UserName))
-            {
-                @:|
-                @Html.ActionLink("Изтриване", "Delete", new { id = item.Id })
-            }
-            
-        </td>
-    </tr>
-}
+                @Html.ActionLink("Към статия", "Details", new {id = item.Id})
+                @if (User.IsInRole("Administrators") || (item.Author != null && User.Identity.Name == item.Author.UserName))
+                {
+                    @:|
+                    @Html.ActionLink("Изтриване", "Delete", new {id = item.Id})
+                }
+
+            </td>
+        </tr>
+    }
 
 </table>
+<br/>
+@if (ViewBag.CountPosts>1)
+{
+    <div>Намерени са @ViewBag.CountPosts статии</div>
+}
+else if (ViewBag.CountPosts==1)
+{
+    <div>Намерена е @ViewBag.CountPosts статия</div>
+}
+else
+{
+    <div>Не са намерени статии</div>
+}
+
+
+<br/>
+Страница @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) от @Model.PageCount
+
+@Html.PagedListPager(Model, page => Url.Action("Index",
+    new { page, sortOrder = ViewBag.CurrentSort, currentFilterTitle = ViewBag.CurrentFilterTitle, currentFilterName = ViewBag.CurrentFilterName }))

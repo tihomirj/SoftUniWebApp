@@ -1,13 +1,13 @@
 ﻿@model MVC_Blog.Models.Post
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Детайли";
 }
 
-<h2>Details</h2>
+<h2>Детайли</h2>
 
 <div>
-    <h4>Post</h4>
+    <h4>Статия</h4>
     <hr/>
     <dl class="dl-horizontal">
         <dt>
@@ -25,7 +25,13 @@
         <dd>
             @Html.DisplayFor(model => model.Title)
         </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Author.FullName)
+        </dt>
 
+        <dd>
+           @Html.DisplayFor(model => model.Author.FullName) (@Html.DisplayFor(model => model.Author.UserName))
+        </dd>
         <dt>
             @Html.DisplayNameFor(model => model.Body)
         </dt>
@@ -48,10 +54,26 @@
 <p>
     @if (User.IsInRole("Administrators"))
     {
-        @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) @:|
+        @Html.ActionLink("Редакция", "Edit", new {id = Model.Id})
+        @:|
     }
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Обратно към списъка със статиите", "Index")
 </p>
+
+
+@if (Model.Tags.Count > 0)
+{
+
+    <h3>Тагове:</h3>
+
+    
+        foreach(var tag in ViewBag.Tags)
+        {
+            <span>@tag.Name; </span>
+        }
+    
+}
+
 @if (Model.Comments.Count > 0)
 {
 

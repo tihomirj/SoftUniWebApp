@@ -8,6 +8,7 @@ using System.Security.Cryptography;
 using System.Web;
 using System.Web.Mvc;
 using MVC_Blog.Models;
+using PagedList;
 
 namespace MVC_Blog.Controllers
 {
@@ -16,16 +17,92 @@ namespace MVC_Blog.Controllers
     {
         private ApplicationDbContext db = new ApplicationDbContext();
 
-        // GET: Posts
-        public ActionResult Index()
+        // GET: Posts - original index method
+        /* public ActionResult Index()
+         {
+             List<Post> posts = db.Posts
+                 .Include(t => t.Topic)
+                 .Include(u => u.Author)
+                 .Include(c=>c.Comments)
+                 .ToList();
+
+             return View(posts);
+         }*/
+        // GET: Posts - this index method will enable sorting
+        public ActionResult Index(string sortOrder, string currentFilterTitle, string currentFilterName, string searchStringTitle, string searchStringName, int? page)
         {
-            List<Post> posts = db.Posts
+            ViewBag.NameSortParm = sortOrder== "Name" ? "name_desc" : "Name";
+            ViewBag.DateSortParm = sortOrder == "Date" ? "date_desc" : "Date";
+            ViewBag.TopicSortParm = string.IsNullOrEmpty(sortOrder) ? "topic_desc" : "";
+            ViewBag.CommentSortParm = sortOrder == "Comment" ? "comment_desc" : "Comment";
+            ViewBag.TitleSortParm = sortOrder == "Title" ? "title_desc" : "Title";
+
+            if (searchStringTitle != null && searchStringName != null) 
+            {
+                page = 1;
+            }
+            else
+            {
+                searchStringTitle = currentFilterTitle;
+                searchStringName = currentFilterName;
+            }
+            ViewBag.CurrentFilterTitle = searchStringTitle;
+            ViewBag.CurrentFilterName = searchStringName;
+            ViewBag.CurrentSort = sortOrder;
+
+            var posts = db.Posts
                 .Include(t => t.Topic)
                 .Include(u => u.Author)
-                .Include(c=>c.Comments)
-                .ToList();
+                .Include(c => c.Comments);
 
-            return View(posts);
+            if (!String.IsNullOrEmpty(searchStringTitle))
+            {
+                posts = posts.Where(p => p.Title.ToUpper().Contains(searchStringTitle.ToUpper()));
+            }
+            if (!String.IsNullOrEmpty(searchStringName))
+            {
+                posts = posts.Where(p => p.Author.FullName.ToUpper().Contains(searchStringName.ToUpper()) || 
+                                            p.Author.UserName.ToUpper().Contains(searchStringName.ToUpper()));
+            }
+
+            switch (sortOrder)
+            {
+                case "title_desc":
+                    posts = posts.OrderByDescending(p => p.Title);
+                    break;
+                case "Title":
+                    posts = posts.OrderBy(p => p.Title);
+                    break;
+
+                case "comment_desc":
+                    posts = posts.OrderByDescending(p => p.Comments.Count);
+                    break;
+                case "Comment":
+                    posts = posts.OrderBy(p => p.Comments.Count);
+                    break;
+                case "topic_desc":
+                    posts = posts.OrderByDescending(p => p.Topic.Name);
+                    break;
+                case "Name":
+                    posts = posts.OrderBy(p => p.Author.FullName);
+                    break;
+                case "name_desc":
+                    posts = posts.OrderByDescending(p => p.Author.FullName);
+                    break;
+                case "Date":
+                    posts = posts.OrderBy(p => p.Date);
+                    break;
+                case "date_desc":
+                    posts = posts.OrderByDescending(p => p.Date);
+                    break;
+                default:
+                    posts = posts.OrderBy(p => p.Topic.Name);
+                    break;
+            }
+            int pageSize = 4;
+            int pageNumber = (page ?? 1);
+            ViewBag.CountPosts = posts.Count();
+            return View(posts.ToPagedList(pageNumber,pageSize));
         }
 
         // GET: Posts/Details/5
@@ -35,9 +112,14 @@ namespace MVC_Blog.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Post post = db.Posts.Find(id);
+            Post post = db.Posts.Include(p => p.Author).SingleOrDefault(p => p.Id == id);
+            
             var comments = db.Posts.Find(id).Comments.ToList();
             ViewBag.Comments = comments;
+
+            var tags = db.Posts.Find(id).Tags.ToList();
+            ViewBag.Tags = tags;
+
             if (post == null)
             {
                 return HttpNotFound();
