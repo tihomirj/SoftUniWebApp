@@ -7,6 +7,7 @@ using System.Net;
 using System.Security.Cryptography;
 using System.Web;
 using System.Web.Mvc;
+using MVC_Blog.Extensions;
 using MVC_Blog.Models;
 using PagedList;
 
@@ -151,6 +152,7 @@ namespace MVC_Blog.Controllers
                 post.Date=DateTime.Now; // the date of the post is always today
                 db.Posts.Add(post);
                 db.SaveChanges();
+                this.AddNotification("Статията е създадена.",NotificationType.INFO);
                 return RedirectToAction("Index");
             }
 
@@ -192,6 +194,7 @@ namespace MVC_Blog.Controllers
             {
                 db.Entry(post).State = EntityState.Modified;
                 db.SaveChanges();
+                this.AddNotification("Статията е редактирана.", NotificationType.INFO);
                 return RedirectToAction("Index");
             }
             return View(post);
@@ -224,6 +227,7 @@ namespace MVC_Blog.Controllers
             Post post = db.Posts.Find(id);
             db.Posts.Remove(post);
             db.SaveChanges();
+            this.AddNotification("Статията е изтрита.", NotificationType.INFO);
             return RedirectToAction("Index");
         }
 
