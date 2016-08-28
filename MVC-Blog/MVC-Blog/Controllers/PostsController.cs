@@ -107,7 +107,7 @@ namespace MVC_Blog.Controllers
         }
 
         // GET: Posts/Details/5
-        public ActionResult Details(int? id)
+        public ActionResult Details(int? id, string commentText)
         {
             if (id == null)
             {
@@ -125,6 +125,21 @@ namespace MVC_Blog.Controllers
             {
                 return HttpNotFound();
             }
+            if (commentText!=null)
+            {
+                Comment commentPost = new Comment()
+                {
+                    Author = db.Users.FirstOrDefault(u => u.UserName == User.Identity.Name),
+                    Date = DateTime.Now,
+                    PostId = (int)id,
+                    Text = commentText,
+                };
+                db.Comments.Add(commentPost);
+                db.SaveChanges();
+                this.AddNotification("Коментарът към статията е създаден.", NotificationType.INFO);
+                return RedirectToAction("Details");
+            }
+
             return View(post);
         }
 

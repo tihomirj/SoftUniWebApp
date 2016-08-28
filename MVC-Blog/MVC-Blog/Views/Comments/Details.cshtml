@@ -45,6 +45,9 @@
     </dl>
 </div>
 <p>
-    @Html.ActionLink("Редактирай", "Edit", new { id = Model.Id }) |
+    @if (User.IsInRole("Administrators") || (Model.Author != null && User.Identity.Name == Model.Author.UserName))
+    {
+        @Html.ActionLink("Редактирай", "Edit", new {id = Model.Id}) @:|
+    }
     @Html.ActionLink("Обратно към списъка с коментари", "Index")
 </p>

@@ -1,4 +1,4 @@
-﻿@model PagedList.IPagedList<MVC_Blog.Models.Post>
+﻿ @model PagedList.IPagedList<MVC_Blog.Models.Post>
 
 @using System.Data.SqlClient
 @using MVC_Blog.Classes;
@@ -21,14 +21,14 @@
 {
     <span>
         Намери по заглавие: @Html.TextBox("SearchStringTitle",ViewBag.CurrentFilterTitle as string)
-        <input class="btn btn-default" type="submit" value="Search" />
+        <input class="btn btn-primary" type="submit" value="Намери" />
     </span>
     <span>
         Намери по автор: @Html.TextBox("SearchStringName", ViewBag.CurrentFilterName as string)
-        <input class="btn btn-default" type="submit" value="Search" />
+        <input class="btn btn-primary" type="submit" value="Намери" />
     </span>
 }
-
+<hr/>
 <table class="table">
     <tr>
 
@@ -75,7 +75,7 @@
                 }
             </td>
             <td>
-                @Html.ActionLink("Коментирай", "Create", "Comments") |
+                @*@Html.ActionLink("Коментирай", "Create", "Comments") |*@
                 @if (User.IsInRole("Administrators") || (item.Author != null && User.Identity.Name == item.Author.UserName))
                 {
                     @Html.ActionLink("Редактирай", "Edit", new {id = item.Id})

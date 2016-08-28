@@ -4,6 +4,9 @@
 body {
     padding-top: 50px;
     padding-bottom: 20px;
+    background-image: url(../Content/Images/back1.png);
+    background-repeat:no-repeat;
+    background-size:cover;
 }
 
 /* Set padding to keep content from hitting the edges */

@@ -1,13 +1,13 @@
 ﻿@model IEnumerable<MVC_Blog.Models.Topic>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Категории";
 }
 
-<h2>Index</h2>
+<h2>Категории</h2>
 
 <p>
-    @Html.ActionLink("Create New", "Create")
+    @Html.ActionLink("Създай нова категория", "Create")
 </p>
 <table class="table">
     <tr>
@@ -25,16 +25,10 @@
         <td>
             @if (User.IsInRole("Administrators"))
             {
-               @Html.ActionLink("Edit", "Edit", new { id = item.Id }) @:|
-            }
-            
-            @Html.ActionLink("Details", "Details", new {id = item.Id}) 
-            @if (User.IsInRole("Administrators"))
-            {
+                @Html.ActionLink("Редактирай", "Edit", new {id = item.Id})
                 @:|
-                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+                @Html.ActionLink("Изтрий", "Delete", new { id = item.Id })
             }
-            
         </td>
     </tr>
 }

@@ -4,11 +4,10 @@
     ViewBag.Title = "Детайли";
 }
 
-<h2>Детайли</h2>
+<h2>Детайли за статия</h2>
 
 <div>
-    <h4>Статия</h4>
-    <hr/>
+    <hr />
     <dl class="dl-horizontal">
         <dt>
             @Html.DisplayNameFor(model => model.Topic.Name)
@@ -30,7 +29,7 @@
         </dt>
 
         <dd>
-           @Html.DisplayFor(model => model.Author.FullName) (@Html.DisplayFor(model => model.Author.UserName))
+            @Html.DisplayFor(model => model.Author.FullName) (@Html.DisplayFor(model => model.Author.UserName))
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.Body)
@@ -52,9 +51,9 @@
 </div>
 
 <p>
-    @if (User.IsInRole("Administrators"))
+    @if (User.IsInRole("Administrators")|| (Model.Author != null && User.Identity.Name == Model.Author.UserName))
     {
-        @Html.ActionLink("Редакция", "Edit", new {id = Model.Id})
+        @Html.ActionLink("Редакция", "Edit", new { id = Model.Id })
         @:|
     }
     @Html.ActionLink("Обратно към списъка със статиите", "Index")
@@ -66,13 +65,33 @@
 
     <h3>Тагове:</h3>
 
-    
-        foreach(var tag in ViewBag.Tags)
-        {
-            <span>@tag.Name; </span>
-        }
-    
+
+    foreach (var tag in ViewBag.Tags)
+    {
+        <span class="badge">@tag.Name </span>
+    }
+
 }
+
+<div>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <h3>Добави коментар към статията</h3>
+        using (Html.BeginForm("Details", "Posts", FormMethod.Get))
+        {
+            <div>
+
+                @Html.TextArea("commentText", ViewBag.CommentText as string, new { rows = 5, cols = 200 })
+                <input class="btn btn-primary" type="submit" value="Добави" />
+            </div>
+        }
+    }
+    else
+    {<div>За да коментирате трябва да се логнете @Html.ActionLink("тук", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" }).</div>
+
+    }
+
+</div>
 
 @if (Model.Comments.Count > 0)
 {
