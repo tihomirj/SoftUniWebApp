@@ -56,11 +56,11 @@ namespace MVC_Blog.Controllers
                 .Include(u => u.Author)
                 .Include(c => c.Comments);
 
-            if (!String.IsNullOrEmpty(searchStringTitle))
+            if (!string.IsNullOrEmpty(searchStringTitle))
             {
                 posts = posts.Where(p => p.Title.ToUpper().Contains(searchStringTitle.ToUpper()));
             }
-            if (!String.IsNullOrEmpty(searchStringName))
+            if (!string.IsNullOrEmpty(searchStringName))
             {
                 posts = posts.Where(p => p.Author.FullName.ToUpper().Contains(searchStringName.ToUpper()) || 
                                             p.Author.UserName.ToUpper().Contains(searchStringName.ToUpper()));
@@ -115,11 +115,10 @@ namespace MVC_Blog.Controllers
             }
             Post post = db.Posts.Include(p => p.Author).SingleOrDefault(p => p.Id == id);
             
-            var comments = db.Posts.Find(id).Comments.ToList();
-            ViewBag.Comments = comments;
+            ViewBag.Comments =db.Posts.Find(id).Comments.ToList();
+            
+            ViewBag.Tags =db.Posts.Find(id).Tags.Select(t => t.Name.ToUpper()).ToList();
 
-            var tags = db.Posts.Find(id).Tags.ToList();
-            ViewBag.Tags = tags;
 
             if (post == null)
             {
@@ -183,17 +182,20 @@ namespace MVC_Blog.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
             //Post post = db.Posts.Find(id);
-            Post post = db.Posts.Include(p => p.Author).SingleOrDefault(p => p.Id == id);
+            Post post = db.Posts.Include(p => p.Author).Include(p=>p.Tags).SingleOrDefault(p => p.Id == id);
             if (post == null || (post.Author.UserName != User.Identity.Name && !User.IsInRole("Administrators")))
             {
                 return HttpNotFound();
             }
             var authors = db.Users.ToList();
             ViewBag.Authors = authors;
-
+            
             var topics = db.Topics.ToList();
             ViewBag.Topics = topics;
 
+            var postWithTags = db.Posts.Find(id);
+            ViewBag.Tags = postWithTags.Tags.Select(t=>t.Name.ToUpper()).ToList();
+            
             return View(post);
         }
 
@@ -203,18 +205,62 @@ namespace MVC_Blog.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public ActionResult Edit([Bind(Include = "Id,TopicId,Title,Body,Date,AuthorId")] Post post)
+        public ActionResult Edit([Bind(Include = "Id,TopicId,Title,Body,Date,AuthorId,Tags")] Post post, string inlineTags)
         {
             if (ModelState.IsValid)
             {
+                
                 db.Entry(post).State = EntityState.Modified;
                 db.SaveChanges();
+                AddTags(post.Id, inlineTags);
                 this.AddNotification("Статията е редактирана.", NotificationType.INFO);
                 return RedirectToAction("Index");
             }
             return View(post);
         }
+        public void AddTags(int id, string text)
+        {
+            Post post = db.Posts.Include(p => p.Tags).SingleOrDefault(p => p.Id == id);
+            if (post != null)
+            {
 
+                var allDbTags = db.Tags.Select(t => t.Name.ToUpper()).ToList();
+
+                char[] delimeters = @",./;:-\=+*".ToCharArray();
+
+                List<string> inlineTags = text.Split(delimeters, StringSplitOptions.RemoveEmptyEntries).Select(t => t.ToUpper().Trim()).ToList();
+
+                List<string> tagsToAddToDb = new List<string>();
+
+
+                foreach (string t in inlineTags)
+                    if (!allDbTags.Contains(t))
+                        tagsToAddToDb.Add(t);
+
+                foreach (var t in tagsToAddToDb) // We add the missing Tags to the database
+                {
+                    if (!string.IsNullOrEmpty(t))
+                    {
+                        Tag aTag = new Tag();
+                        aTag.Name = t;
+                        db.Tags.Add(aTag);
+                        db.SaveChanges();
+                    }
+                        
+                    
+                    
+                }
+                List<Tag> newTags = db.Tags.Where(t => inlineTags.Contains(t.Name)).ToList();//Get the tags fro the DB
+
+                post.Tags.Clear(); //Clear old tags
+                foreach (var t in newTags) //Add the new Tags
+                {
+                    post.Tags.Add(t);
+                }
+            }
+            db.SaveChanges();
+
+        }
         // GET: Posts/Delete/5
         [Authorize]
         public ActionResult Delete(int? id)

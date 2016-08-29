@@ -13,6 +13,7 @@ namespace MVC_Blog.Models
 
         [Required]
         [StringLength(50)]
+        [Display(Name = "Тагове")]
         public string Name { get; set; }
 
        

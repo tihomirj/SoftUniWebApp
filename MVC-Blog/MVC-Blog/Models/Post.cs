@@ -46,6 +46,7 @@ namespace MVC_Blog.Models
 
         public virtual ICollection<Comment> Comments { get; set; }
 
+        [Display(Name = "Тагове")]
         public virtual ICollection<Tag> Tags { get; set; }
 
         public virtual Topic Topic { get; set; }
