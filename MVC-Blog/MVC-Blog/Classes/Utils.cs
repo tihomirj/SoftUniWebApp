@@ -8,7 +8,7 @@ namespace MVC_Blog.Classes
 {
     public class Utils
     {
-        public static string CutText(string text, int MaxLength = 100)
+        public static string CutText(string text, int MaxLength = 200)
         {
             if (text == null || text.Length <= MaxLength)
                 return text;

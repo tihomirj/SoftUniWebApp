@@ -17,14 +17,14 @@ namespace MVC_Blog.Controllers
             List<Post> mostRecentPost = db.Posts
                 .Include(p=>p.Author)
                 .OrderByDescending(p => p.Date)
-                .Take(4)
+                .Take(3)
                 .ToList();
 
             List<Post> mostCommentedPosts = db.Posts
                 .Include(p => p.Author)
                 .Include(p => p.Comments)
                 .OrderByDescending(p => p.Comments.Count)
-                .Take(4)
+                .Take(3)
                 .ToList();
             ViewBag.MostCommentedPosts = mostCommentedPosts;
 

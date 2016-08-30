@@ -6,10 +6,10 @@
 @model List<MVC_Blog.Models.Post>
 
 <section class="row">
-    <h2>Най-нови публикации:</h2>
+    <h2 class="col-md-12">Най-нови публикации</h2>
     @foreach (var post in Model)
     {
-        <article class="post col-md-6">
+        <article class="post col-md-4">
             <h2 class="title"><a href="/Posts/Details/@post.Id">@Utils.CutText(post.Title, 30)</a>
             </h2>
             <div class="about">Публикувано
@@ -30,12 +30,12 @@
 </section>
 
 <section class="row">
-    <h2>Най-коментирани публикации:</h2>
+    <h2 class="col-md-12">Най-коментирани публикации</h2>
     @foreach (var post in ViewBag.MostCommentedPosts)
     {
-        <article class="post col-md-6">
+        <article class="post col-md-4">
             <h2 class="title">
-                <a href="/Posts/Details/@post.Id">@Utils.CutText(post.Title, 30)</a>
+                <a href="/Posts/Details/@post.Id">@Utils.CutText(post.Title, 50)</a>
             </h2>
             <div class="about">
                 Публикувано

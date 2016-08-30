@@ -20,13 +20,18 @@
 @using (Html.BeginForm("Index", "Posts", FormMethod.Get))
 {
     <span>
-        Намери по заглавие: @Html.TextBox("SearchStringTitle",ViewBag.CurrentFilterTitle as string)
+        Търси заглавие: @Html.TextBox("SearchStringTitle",ViewBag.CurrentFilterTitle as string)
         <input class="btn btn-primary" type="submit" value="Намери" />
     </span>
     <span>
-        Намери по автор: @Html.TextBox("SearchStringName", ViewBag.CurrentFilterName as string)
+        Търси автор: @Html.TextBox("SearchStringName", ViewBag.CurrentFilterName as string)
         <input class="btn btn-primary" type="submit" value="Намери" />
     </span>
+    <span>
+        Търси таг: @Html.TextBox("SearchStringTag", ViewBag.CurrentFilterTag as string)
+        <input class="btn btn-primary" type="submit" value="Намери" />
+    </span>
+
 }
 <hr/>
 <table class="table">
@@ -53,10 +58,17 @@
                 @Html.DisplayFor(modelItem => item.Topic.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Title)
+                <div>@Html.DisplayFor(modelItem => item.Title)</div>
             </td>
             <td>
-                @Utils.CutText(item.Body)
+                <div>@Utils.CutText(item.Body)</div>
+                <div>
+                    @foreach (var t in item.Tags)
+                {
+                    <span class="badge">@t.Name </span>
+                }
+            </div>
+
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Date)
@@ -113,4 +125,4 @@ else
 Страница @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) от @Model.PageCount
 
 @Html.PagedListPager(Model, page => Url.Action("Index",
-    new { page, sortOrder = ViewBag.CurrentSort, currentFilterTitle = ViewBag.CurrentFilterTitle, currentFilterName = ViewBag.CurrentFilterName }))
+    new { page, sortOrder = ViewBag.CurrentSort, currentFilterTitle = ViewBag.CurrentFilterTitle, currentFilterName = ViewBag.CurrentFilterName, currentFilterTag = ViewBag.CurrentFilterTag }))

@@ -30,7 +30,7 @@ namespace MVC_Blog.Controllers
              return View(posts);
          }*/
         // GET: Posts - this index method will enable sorting
-        public ActionResult Index(string sortOrder, string currentFilterTitle, string currentFilterName, string searchStringTitle, string searchStringName, int? page)
+        public ActionResult Index(string sortOrder, string currentFilterTitle, string currentFilterName, string currentFilterTag, string searchStringTitle, string searchStringName, string searchStringTag, int? page)
         {
             ViewBag.NameSortParm = sortOrder== "Name" ? "name_desc" : "Name";
             ViewBag.DateSortParm = sortOrder == "Date" ? "date_desc" : "Date";
@@ -38,7 +38,7 @@ namespace MVC_Blog.Controllers
             ViewBag.CommentSortParm = sortOrder == "Comment" ? "comment_desc" : "Comment";
             ViewBag.TitleSortParm = sortOrder == "Title" ? "title_desc" : "Title";
 
-            if (searchStringTitle != null && searchStringName != null) 
+            if (searchStringTitle != null && searchStringName != null && searchStringTag != null) 
             {
                 page = 1;
             }
@@ -46,16 +46,30 @@ namespace MVC_Blog.Controllers
             {
                 searchStringTitle = currentFilterTitle;
                 searchStringName = currentFilterName;
+                searchStringTag = currentFilterTag;
             }
+            // the current filters are saved so tah the paging can work with the selections
             ViewBag.CurrentFilterTitle = searchStringTitle;
             ViewBag.CurrentFilterName = searchStringName;
+            ViewBag.CurrentFilterTag = searchStringTag;
             ViewBag.CurrentSort = sortOrder;
-
+            
             var posts = db.Posts
                 .Include(t => t.Topic)
                 .Include(u => u.Author)
-                .Include(c => c.Comments);
+                .Include(c => c.Comments)
+                .Include(p=>p.Tags);
+            
 
+            if (!string.IsNullOrEmpty(searchStringTag))
+            {
+                char[] delimeters = @",./;:-\=+*".ToCharArray();
+                var searchTags = searchStringTag
+                    .Split(delimeters, StringSplitOptions.RemoveEmptyEntries)
+                    .Select(s => s.ToUpper().Trim())
+                    .ToList();
+                posts = posts.Where(t => t.Tags.Any()).Where(pt => pt.Tags.Any(t => searchTags.Contains(t.Name)));
+            }
             if (!string.IsNullOrEmpty(searchStringTitle))
             {
                 posts = posts.Where(p => p.Title.ToUpper().Contains(searchStringTitle.ToUpper()));
@@ -100,7 +114,7 @@ namespace MVC_Blog.Controllers
                     posts = posts.OrderBy(p => p.Topic.Name);
                     break;
             }
-            int pageSize = 4;
+            int pageSize = 3;
             int pageNumber = (page ?? 1);
             ViewBag.CountPosts = posts.Count();
             return View(posts.ToPagedList(pageNumber,pageSize));
@@ -158,7 +172,7 @@ namespace MVC_Blog.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public ActionResult Create([Bind(Include = "Id,TopicId,Title,Body")] Post post) //The date is not coming in from the form
+        public ActionResult Create([Bind(Include = "Id,TopicId,Title,Body")] Post post, string inlineTags) //The date is not coming in from the form
         {
             if (ModelState.IsValid)
             {
@@ -166,6 +180,7 @@ namespace MVC_Blog.Controllers
                 post.Date=DateTime.Now; // the date of the post is always today
                 db.Posts.Add(post);
                 db.SaveChanges();
+                AddTags(post.Id, inlineTags);
                 this.AddNotification("Статията е създадена.",NotificationType.INFO);
                 return RedirectToAction("Index");
             }
@@ -246,9 +261,6 @@ namespace MVC_Blog.Controllers
                         db.Tags.Add(aTag);
                         db.SaveChanges();
                     }
-                        
-                    
-                    
                 }
                 List<Tag> newTags = db.Tags.Where(t => inlineTags.Contains(t.Name)).ToList();//Get the tags fro the DB
 
