@@ -1,4 +1,7 @@
-﻿.alert {
+﻿.hm {
+    border-radius: 50px;
+}
+.alert {
     margin-top: 10px;
 }
 body {
@@ -7,6 +10,7 @@ body {
     background-image: url(../Content/Images/back1.png);
     background-repeat:no-repeat;
     background-size:cover;
+   
 }
 
 /* Set padding to keep content from hitting the edges */

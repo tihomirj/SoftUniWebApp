@@ -28,9 +28,11 @@
                     {
                         <li>@Html.ActionLink("Категории", "Index", "Topics")</li>
                         <li>@Html.ActionLink("Нова категория", "Create", "Topics")</li>
+                        <li>@Html.ActionLink("Нов коментар", "Create", "Comments")</li>
+                        <li>@Html.ActionLink("Тагове", "Index", "Tags")</li>
                     }
                     <li>@Html.ActionLink("Коментари", "Index", "Comments")</li>
-                    <li>@Html.ActionLink("Нов коментар", "Create", "Comments")</li>
+                    
                 </ul>
                 @Html.Partial("_LoginPartial")
             </div>
