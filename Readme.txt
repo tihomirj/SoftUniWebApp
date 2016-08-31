@@ -7,7 +7,7 @@ Each category(topic) can have many posts, while a post only falls under one cate
 A post can have many comments, while a comment can belong to only one post.
 A post can have many tags and each tag can be attached to many posts.
 A user can be the author of many posts and comments but each post and comment can only have one author.
-Only logged in users can create posts and comments. Anonymous authors are not allowed to most neither articles nor commentsw to them.
+Only logged in users can create posts and comments. Anonymous authors are not allowed to post neither articles nor comments to them.
 Anonymous users can only browse and read the posts and the comments.
   
 Features:
@@ -23,7 +23,7 @@ Features:
 
 * The user can sort in ascending and descending order the posts by category, title, data, number of comments and the name (full name or user name) of the author.
 
-* The user can search the posts by title, author and tags. The user can write a list of tags and he will find all posts that have been tagged with these tags.
+* The user can search the posts by title, author and tags. The user can write a list of tags to find all posts that have been tagged with these tags.
 
 * There are notifications that notify the users for created, edited and deleted posts and comments.
 
