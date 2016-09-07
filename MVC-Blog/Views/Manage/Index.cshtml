@@ -1,0 +1,27 @@
+﻿@model MVC_Blog.Models.IndexViewModel
+@{
+    ViewBag.Title = "Промяна парола";
+}
+
+<h2>@ViewBag.Title.</h2>
+
+<p class="text-success">@ViewBag.StatusMessage</p>
+<div>
+    <h4>Промяна на паролата</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>Парола:</dt>
+        <dd>
+            [
+            @if (Model.HasPassword)
+            {
+                @Html.ActionLink("Промени парола", "ChangePassword")
+            }
+            else
+            {
+                @Html.ActionLink("Create", "SetPassword")
+            }
+            ]
+        </dd>
+    </dl>
+</div>

@@ -1,0 +1,57 @@
+﻿@model MVC_Blog.Models.Post
+
+@{
+    ViewBag.Title = "Изтриване на статия";
+}
+
+<h2>Изтриване на статия</h2>
+
+<h3>Сигурни ли сте, че искате да изтриете тази статия?</h3>
+<div>
+    
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Topic.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Topic.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Body)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Body)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Date)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Date)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <div>Това действие ще изтрие статията и всички коментари към нея.</div>
+            <input type="submit" value="Изтрий статията" class="btn btn-danger"/> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

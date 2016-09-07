@@ -1,0 +1,128 @@
+﻿ @model PagedList.IPagedList<MVC_Blog.Models.Post>
+
+@using System.Data.SqlClient
+@using MVC_Blog.Classes;
+@using MVC_Blog.Models;
+@using PagedList.Mvc;
+
+<link href="~/Content/PagedList.css" rel="stylesheet" type="text/css"/>
+
+@{
+    ViewBag.Title = "Posts";
+}
+
+<h2>Статии</h2>
+
+<p>
+    @Html.ActionLink("Създай нова статия", "Create")
+</p>
+
+@using (Html.BeginForm("Index", "Posts", FormMethod.Get))
+{
+    <span>
+        Търси заглавие: @Html.TextBox("SearchStringTitle",ViewBag.CurrentFilterTitle as string)
+        <input class="btn btn-primary" type="submit" value="Намери" />
+    </span>
+    <span>
+        Търси автор: @Html.TextBox("SearchStringName", ViewBag.CurrentFilterName as string)
+        <input class="btn btn-primary" type="submit" value="Намери" />
+    </span>
+    <span>
+        Търси таг: @Html.TextBox("SearchStringTag", ViewBag.CurrentFilterTag as string)
+        <input class="btn btn-primary" type="submit" value="Намери" />
+    </span>
+
+}
+<hr/>
+<table class="table">
+    <tr>
+
+        <th>@Html.ActionLink("Категория", "Index", new {SortOrder = ViewBag.TopicSortParm})</th>
+
+        <th>@Html.ActionLink("Заглавие", "Index", new {SortOrder = ViewBag.TitleSortParm})</th>
+        <th>
+            Съдържание
+        </th>
+        <th>@Html.ActionLink("Дата", "Index", new {SortOrder = ViewBag.DateSortParm})</th>
+
+        <th>@Html.ActionLink("Автор", "Index", new {SortOrder = ViewBag.NameSortParm})</th>
+        <!--<th>Коментари</th>-->
+        <th>@Html.ActionLink("Коментари", "Index", new {SortOrder = ViewBag.CommentSortParm})</th>
+        <th>Действия</th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Topic.Name)
+            </td>
+            <td>
+                <div>@Html.DisplayFor(modelItem => item.Title)</div>
+            </td>
+            <td>
+                <div>@Utils.CutText(item.Body)</div>
+                <div>
+                    @foreach (var t in item.Tags)
+                {
+                    <span class="badge">@t.Name </span>
+                }
+            </div>
+
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Date)
+            </td>
+            <td>@if (item.Author != null)
+                {
+                    @item.Author.FullName
+                    @:(@item.Author.UserName)
+                }
+                else
+                {@: (<i>анонимен автор</i>)
+                }
+            </td>
+            <td>@if (item.Comments.Count > 0)
+                {@item.Comments.Count
+                }
+            </td>
+            <td>
+                @*@Html.ActionLink("Коментирай", "Create", "Comments") |*@
+                @if (User.IsInRole("Administrators") || (item.Author != null && User.Identity.Name == item.Author.UserName))
+                {
+                    @Html.ActionLink("Редактирай", "Edit", new {id = item.Id})
+                    @:|
+                }
+
+                @Html.ActionLink("Към статия", "Details", new {id = item.Id})
+                @if (User.IsInRole("Administrators") || (item.Author != null && User.Identity.Name == item.Author.UserName))
+                {
+                    @:|
+                    @Html.ActionLink("Изтриване", "Delete", new {id = item.Id})
+                }
+
+            </td>
+        </tr>
+    }
+
+</table>
+<br/>
+@if (ViewBag.CountPosts>1)
+{
+    <div>Намерени са @ViewBag.CountPosts статии</div>
+}
+else if (ViewBag.CountPosts==1)
+{
+    <div>Намерена е @ViewBag.CountPosts статия</div>
+}
+else
+{
+    <div>Не са намерени статии</div>
+}
+
+
+<br/>
+Страница @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) от @Model.PageCount
+
+@Html.PagedListPager(Model, page => Url.Action("Index",
+    new { page, sortOrder = ViewBag.CurrentSort, currentFilterTitle = ViewBag.CurrentFilterTitle, currentFilterName = ViewBag.CurrentFilterName, currentFilterTag = ViewBag.CurrentFilterTag }))

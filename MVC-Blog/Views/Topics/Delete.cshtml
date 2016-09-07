@@ -1,0 +1,32 @@
+﻿@model MVC_Blog.Models.Topic
+
+@{
+    ViewBag.Title = "Изтриване категория";
+}
+
+<h2>Изтриване на категория</h2>
+
+<h3>Това действие ще изтрие категорията и всички статии и коментари към нея. Сигурни ли сте?</h3>
+<div>
+   
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Изтрий категорията" class="btn btn-danger" /> |
+            @Html.ActionLink("Обратно към списъка с категориите", "Index")
+        </div>
+    }
+</div>

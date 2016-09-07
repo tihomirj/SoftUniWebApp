@@ -1,0 +1,56 @@
+﻿@model MVC_Blog.Models.Comment
+
+@{
+    ViewBag.Title = "Изтриване коментар";
+}
+
+<h2>Изтрий</h2>
+
+<h3>Сигурни ли сте, че искате да изтриете този коментар?</h3>
+<div>
+    <h4>Коментар</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Author.FullName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Author.FullName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.PostId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Post.Title)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Text)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Text)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Date)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Date)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Изтрий коментар" class="btn btn-danger" /> |
+            @Html.ActionLink("Обратно към коментари", "Index")
+        </div>
+    }
+</div>

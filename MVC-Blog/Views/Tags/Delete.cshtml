@@ -1,0 +1,32 @@
+﻿@model MVC_Blog.Models.Tag
+
+@{
+    ViewBag.Title = "Изтриване таг";
+}
+
+<h2>Изтриване на таг</h2>
+
+<h3>Сигурни ли сте, че искате да изтриете този таг?</h3>
+<div>
+    
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Изтриване" class="btn btn-danger" /> |
+            @Html.ActionLink("Обратно към списъка с таговете", "Index")
+        </div>
+    }
+</div>

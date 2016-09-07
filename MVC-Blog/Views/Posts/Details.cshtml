@@ -1,0 +1,116 @@
+﻿@model MVC_Blog.Models.Post
+
+@{
+    ViewBag.Title = "Детайли";
+}
+
+<h2>Детайли за статия</h2>
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Topic.Name)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Topic.Name)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Author.FullName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Author.FullName) (@Html.DisplayFor(model => model.Author.UserName))
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Body)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Body)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Date)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Date)
+        </dd>
+
+    </dl>
+</div>
+
+<p>
+    @if (User.IsInRole("Administrators")|| (Model.Author != null && User.Identity.Name == Model.Author.UserName))
+    {
+        @Html.ActionLink("Редакция", "Edit", new { id = Model.Id })
+        @:|
+    }
+    @Html.ActionLink("Обратно към списъка със статиите", "Index")
+</p>
+
+
+@if (Model.Tags.Count > 0)
+{
+
+    <h3>Тагове:</h3>
+
+
+    foreach (var tag in ViewBag.Tags)
+    {
+        <span class="badge">@tag </span>
+    }
+
+}
+
+<div>
+    @if (User.Identity.IsAuthenticated)
+    {
+        <h3>Добави коментар към статията</h3>
+        using (Html.BeginForm("Details", "Posts", FormMethod.Get))
+        {
+            <div>
+
+                @Html.TextArea("commentText", ViewBag.CommentText as string, new { rows = 5, cols = 200 })
+                <input class="btn btn-primary" type="submit" value="Добави" />
+            </div>
+        }
+    }
+    else
+    {<div>За да коментирате трябва да се логнете @Html.ActionLink("тук", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" }).</div>
+
+    }
+
+</div>
+
+@if (Model.Comments.Count > 0)
+{
+
+    <h3>Коментари:</h3>
+
+    <table class="table">
+        <tr>
+            <th>Коментар</th>
+            <th>Автор</th>
+            <th>Дата</th>
+        </tr>
+        @foreach (var com in ViewBag.Comments)
+        {
+            <tr>
+                <td>@com.Text</td>
+                <td>@com.Author.FullName</td>
+                <td>@com.Date</td>
+            </tr>
+        }
+    </table>
+}

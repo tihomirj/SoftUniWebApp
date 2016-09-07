@@ -1,0 +1,32 @@
+﻿@model IEnumerable<MVC_Blog.Models.Tag>
+
+@{
+    ViewBag.Title = "Списък с тагове";
+}
+
+<h2>Списък с тагове</h2>
+
+<p>
+    @Html.ActionLink("Създай нов", "Create")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>Действие</th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+        <td>
+            @Html.ActionLink("Редактирай", "Edit", new { id=item.Id }) |
+            @Html.ActionLink("Изтрий", "Delete", new { id=item.Id })
+        </td>
+    </tr>
+}
+
+</table>
